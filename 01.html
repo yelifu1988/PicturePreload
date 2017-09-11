@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>传统加载</title>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <style type="text/css">
+        a{
+            text-decoration: none;
+        }
+        .box{
+            text-align: center;
+        }
+        .btn{
+            display: inline-block;
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+            padding: 0 10px;
+            margin-right: 50px;
+            color: #333;
+
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <img width="1200" alt="pic" src="http://i2.hoopchina.com.cn/user/308/15960308/13383588090.jpg"  id="img" />
+    <p>
+        <a href="javascript:;" class="btn" data-control="prev">上一页</a>
+        <a href="javascript:;" class="btn" data-control="next">下一页</a>
+    </p>
+</div>
+<script>
+    $(function () {
+        //传统加载函数
+        function traditionalLoading() {
+            var imgs=[
+
+                'http://i2.hoopchina.com.cn/user/308/15960308/13383588090.jpg',
+
+                'http://img.article.pchome.net/00/44/23/20/pic_lib/wm/2.jpg',
+
+                'http://lcd.yesky.com/imagelist/2009/044/404q4y8g4m0p.jpg',
+
+                'http://lcd.yesky.com/imagelist/2009/044/cgro54wt2t2x.jpg'
+
+            ];
+
+            var index = 0,len = imgs.length;
+
+            $('.btn').on('click',function () {
+                if ('prev'===$(this).data('control')){//上一张
+                    //Math.max(0,--index) 0和--index比较 返回大的值 如果 --index小于0返回0
+                    index = Math.max(0,--index);
+                } else {//下一页
+                    //Math.min(0,--index) len-1和++index比较 返回小的值 如果 ++index大于len-1 返回len-1
+                    index =Math.min(len-1,++index);
+                }
+                console.log((index+1)+'/'+len);
+                $('#img').attr('src',imgs[index]);
+            })
+        }
+
+        traditionalLoading();
+    })
+
+</script>
+
+</body>
+</html>
