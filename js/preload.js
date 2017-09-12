@@ -8,13 +8,47 @@
         this.opts = $.extend({},PreLoad.DEFAULTS,options);
 
         //无序加载方法 注：加下划线表明这个方法只在这个内部使用，二不提供外部调用
-        this._unoredered();
+        //this._unoredered();
+
+        if (this.opts.order==='ordered'){//如果有参数ordered就执行有序有序预加载
+            this._ordered();
+        }else {
+            this._unoredered();
+        }
     };
 
     PreLoad.DEFAULTS = {
+        order: 'unordered',//默认使用无序预加载
         each: null, //每一张图片加载完毕后执行
         all: null  //所有图片加载完毕后执行
     };
+    //有序预加载
+    PreLoad.prototype._ordered = function () {
+        var imgs = this.imgs;
+        var opts = this.opts;
+        var count = 0,//初始化当前加载第几张图片
+            len = imgs.length;
+
+        load();
+        //有序加载
+        function load() {
+            var imgObj = new Image();
+            $(imgObj).on('load error',function () {
+                opts.each && opts.each(count);
+                if (count >= len){
+                    //所有图片已经加载完毕
+                    opts.all && opts.all()
+                }else {
+                    load();
+                }
+
+                count++;
+            });
+
+            imgObj.src = imgs[count];
+        }
+    };
+
 
     //在构造函数原型上添加方法  无序加载
     PreLoad.prototype._unoredered = function () {
@@ -34,7 +68,7 @@
             //注意：一定要把error事件也绑定上 否则一旦有其他原因导致有的img加载不出来 load事件就执行不了 下面的代码就会不执行所以不管加载成功否都继续执行
             $(imgObj).on('load error',function () {
                 //先判断是否传了参数
-                opts.each && opts.each(count)
+                opts.each && opts.each(count);
 
                 //加载完成 隐藏
                 if (count>=len-1){
